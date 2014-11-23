@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Sp2014f_GroupA</string>
-    <string name="hello_world">ハロー GroupA!</string>
+    <string name="hello_world">ハロー グループA!</string>
     <string name="action_settings">Settings</string>
 
 </resources>
