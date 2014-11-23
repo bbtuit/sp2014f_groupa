@@ -3,6 +3,7 @@ package ac.bbt.sp2014f_groupa;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -59,6 +60,8 @@ public class MainActivity extends Activity {
      * A placeholder fragment containing a simple view.
      */
     public static class PlaceholderFragment extends Fragment {
+    	SQLiteHelper helper = null;
+    	SQLiteDatabase db = null;
 
         public PlaceholderFragment() {
         }
@@ -67,6 +70,9 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            
+            helper = SQLiteHelper.getInstance();
+
             return rootView;
         }
     }
