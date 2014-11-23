@@ -14,11 +14,15 @@ import android.os.Build;
 
 public class MainActivity extends Activity {
 
+	// onCreateメソッド(画面初期表示イベントハンドラ)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
+		// スーパークラスのonCreateメソッド呼び出し
+    	super.onCreate(savedInstanceState);
+        // レイアウト設定ファイルの指定
+    	setContentView(R.layout.activity_main);
+        // フラグメントの設定
+    	if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();

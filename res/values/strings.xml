@@ -4,5 +4,7 @@
     <string name="app_name">Sp2014f_GroupA</string>
     <string name="hello_world">ハロー グループA!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="rss_id">登録RSSのURL：</string>
+    <string name="rss_insert">登録!</string>
+    <string name="rss_message">登録に成功しました</string>
 </resources>
