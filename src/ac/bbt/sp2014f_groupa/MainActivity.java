@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
-
 public class MainActivity extends Activity {
 
     @Override
@@ -23,6 +22,17 @@ public class MainActivity extends Activity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
+        
+		// SQLiteヘルパーを初期化する
+		SQLiteHelper helper = new SQLiteHelper(this);
+
+		// rssesの存在で初期化済みかを判断
+		if (! helper.isTableExists("rsses")) {
+			// テーブルが初期化されていないのなら、
+			// 初期化とダミーデータの追加を行う
+			helper.initTables();
+			helper.initDummyData();
+		}
     }
 
 
