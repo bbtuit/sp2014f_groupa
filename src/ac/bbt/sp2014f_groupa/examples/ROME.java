@@ -1,4 +1,4 @@
-package ac.bbt.sp2014f_groupa.exapmles;
+package ac.bbt.sp2014f_groupa.examples;
 
 import java.io.Reader;
 import java.net.URL;
