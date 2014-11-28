@@ -51,9 +51,6 @@ public class AddRssActivity extends Activity {
         }
     }
 
-    SQLiteHelper helper = SQLiteHelper.getInstance();
-    SQLiteDatabase db = helper.getWritableDatabase();
-    ContentValues val = new ContentValues();
     
 //ここからDBサンプルから転記・改造
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +80,8 @@ public class AddRssActivity extends Activity {
 
         return rootView;
     }
-    
+}
+
     // クリックリスナー定義
     class ButtonClickListener implements OnClickListener {
         // onClickメソッド(ボタンクリック時イベントハンドラ)
@@ -94,7 +92,6 @@ public class AddRssActivity extends Activity {
             // メッセージ表示用
             String message  = "";
             TextView label = (TextView)getActivity().findViewById(R.id.tv_message);
-
             // 入力情報取得
             EditText productid = (EditText)getActivity().findViewById(R.id.et_id);
             EditText name = (EditText)getActivity().findViewById(R.id.et_name);
@@ -107,8 +104,9 @@ public class AddRssActivity extends Activity {
             tablelayout.removeAllViews();
 
             // 該当DBオブジェクト取得
-            db = helper.getWritableDatabase();
-
+            SQLiteHelper helper = SQLiteHelper.getInstance();
+            SQLiteDatabase db = helper.getWritableDatabase();
+ 
             // 登録ボタンが押された場合
             if(tag.equals("insert")){
                 // テーブル作成
@@ -121,7 +119,7 @@ public class AddRssActivity extends Activity {
                                 "name text not null," +
                                 "price integer default 0)";
                     // SQL実行
-                    db.execSQL(sql);
+                    //db.execSQL(sql);
 
                     // メッセージ設定
                     message = "テーブルを作成しました！\n";
