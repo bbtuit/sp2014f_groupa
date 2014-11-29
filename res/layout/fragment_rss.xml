@@ -12,42 +12,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="@string/tv_id"
+                android:text="@string/tv_url"
                 android:textSize="18sp" />
             <EditText
-                android:id="@+id/et_id"
+                android:id="@+id/et_url"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:inputType="text" />
         </TableRow>
-        <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
 
-            <EditText
-                android:id="@+id/et_name"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="text" />
-        </TableRow>
         <TableRow>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:text="@string/tv_price"
+                android:text="@string/tv_title"
                 android:textSize="18sp" />
             <EditText
-                android:id="@+id/et_price"
+                android:id="@+id/et_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="70dp"
                 android:gravity="right"
                 android:inputType="number" />
         </TableRow>
-    </TableLayout>
+
+        <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/tv_created_at"
+                android:textSize="18sp" />
+            <EditText
+                android:id="@+id/et_created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="70dp"
+                android:gravity="right"
+                android:inputType="number" />
+        </TableRow>
+        </TableLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

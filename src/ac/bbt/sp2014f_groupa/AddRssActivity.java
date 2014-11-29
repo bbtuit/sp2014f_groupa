@@ -80,8 +80,6 @@ public class AddRssActivity extends Activity {
 
         return rootView;
     }
-}
-
     // クリックリスナー定義
     class ButtonClickListener implements OnClickListener {
         // onClickメソッド(ボタンクリック時イベントハンドラ)
@@ -93,9 +91,9 @@ public class AddRssActivity extends Activity {
             String message  = "";
             TextView label = (TextView)getActivity().findViewById(R.id.tv_message);
             // 入力情報取得
-            EditText productid = (EditText)getActivity().findViewById(R.id.et_id);
-            EditText name = (EditText)getActivity().findViewById(R.id.et_name);
-            EditText price = (EditText)getActivity().findViewById(R.id.et_url);
+            EditText url = (EditText)getActivity().findViewById(R.id.et_id);
+            EditText title = (EditText)getActivity().findViewById(R.id.et_title);
+            EditText created_at = (EditText)getActivity().findViewById(R.id.et_url);
 
             // テーブルレイアウトオブジェクト取得
             TableLayout tablelayout = (TableLayout)getActivity().findViewById(R.id.tl_list);
@@ -106,28 +104,9 @@ public class AddRssActivity extends Activity {
             // 該当DBオブジェクト取得
             SQLiteHelper helper = SQLiteHelper.getInstance();
             SQLiteDatabase db = helper.getWritableDatabase();
- 
+
             // 登録ボタンが押された場合
             if(tag.equals("insert")){
-                // テーブル作成
-                try{
-                    // SQL文定義
-                    String sql
-                        = "create table product (" +
-                                "_id integer primary key autoincrement," +
-                                "productid text not null," +
-                                "name text not null," +
-                                "price integer default 0)";
-                    // SQL実行
-                    //db.execSQL(sql);
-
-                    // メッセージ設定
-                    message = "テーブルを作成しました！\n";
-                }catch(Exception e){
-                    message  = "テーブルは作成されています！\n";
-                    Log.e("ERROR",e.toString());
-                }
-
                 // データ登録
                 try{
                     // トランザクション制御開始
@@ -135,11 +114,11 @@ public class AddRssActivity extends Activity {
 
                     // 登録データ設定
                     ContentValues val = new ContentValues();
-                    val.put("productid", productid.getText().toString());
-                    val.put("name", name.getText().toString());
-                    val.put("price", price.getText().toString());
+                    val.put("url", url.getText().toString());
+                    val.put("title", title.getText().toString());
+                    val.put("created_at", created_at.getText().toString());
                     // データ登録
-                    db.insert("product", null, val);
+                    db.insert("id", null, val);
 
                     // コミット
                     db.setTransactionSuccessful();
@@ -161,8 +140,8 @@ public class AddRssActivity extends Activity {
                 try{
                     // 更新条件
                     String condition = null;
-                    if(productid != null && !productid.equals("")){
-                        condition = "productid = '" + productid.getText().toString() + "'";
+                    if(url != null && !url.equals("")){
+                        condition = "url = '" + url.getText().toString() + "'";
                     }
 
                     // トランザクション制御開始
@@ -170,10 +149,10 @@ public class AddRssActivity extends Activity {
 
                     // 更新データ設定
                     ContentValues val = new ContentValues();
-                    val.put("name", name.getText().toString());
-                    val.put("price", price.getText().toString());
+                    val.put("title", title.getText().toString());
+                    val.put("created_at", created_at.getText().toString());
                     // データ更新
-                    db.update("product", val, condition, null);
+                    db.update("id", val, condition, null);
 
                     // コミット
                     db.setTransactionSuccessful();
@@ -195,16 +174,16 @@ public class AddRssActivity extends Activity {
                 try{
                     // 削除条件
                     String condition = null;
-                    if(productid != null && !productid.equals("")){
+                    if(url != null && !url.equals("")){
 
-                        condition = "productid = '" + productid.getText().toString() + "'";
+                        condition = "url = '" + url.getText().toString() + "'";
                     }
 
                     // トランザクション制御開始
                     db.beginTransaction();
 
                     // データ削除
-                    db.delete("product", condition, null);
+                    db.delete("id", condition, null);
 
                     // コミット
                     db.setTransactionSuccessful();
@@ -228,11 +207,11 @@ public class AddRssActivity extends Activity {
                     db = helper.getReadableDatabase();
 
                     // 列名定義
-                    String columns[] = {"productid","name","price"};
+                    String columns[] = {"url","title","created_at"};
 
                     // データ取得
                     Cursor cursor = db.query(
-                            "product", columns, null, null, null, null, "productid");
+                            "id", columns, null, null, null, null, "url");
 
                     // テーブルレイアウトの表示範囲を設定
                     tablelayout.setStretchAllColumns(true);
@@ -241,7 +220,7 @@ public class AddRssActivity extends Activity {
                     TableRow headrow = new TableRow(getActivity());
 
                     TextView headtxt1 = new TextView(getActivity());
-                    headtxt1.setText("ID");
+                    headtxt1.setText("URL");
                     headtxt1.setGravity(Gravity.CENTER_HORIZONTAL);
                     headtxt1.setWidth(60);
                     TextView headtxt2 = new TextView(getActivity());
@@ -249,7 +228,7 @@ public class AddRssActivity extends Activity {
                     headtxt2.setGravity(Gravity.CENTER_HORIZONTAL);
                     headtxt2.setWidth(100);
                     TextView headtxt3 = new TextView(getActivity());
-                    headtxt3.setText("URL");
+                    headtxt3.setText("登録日");
                     headtxt3.setGravity(Gravity.CENTER_HORIZONTAL);
                     headtxt3.setWidth(60);
                     headrow.addView(headtxt1);
@@ -261,19 +240,19 @@ public class AddRssActivity extends Activity {
                     while(cursor.moveToNext()){
 
                         TableRow row = new TableRow(getActivity());
-                        TextView productidtxt
+                        TextView urltxt
                                 = new TextView(getActivity());
-                        productidtxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                        productidtxt.setText(cursor.getString(0));
-                        TextView nametxt = new TextView(getActivity());
-                        nametxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                        nametxt.setText(cursor.getString(1));
-                        TextView pricetxt = new TextView(getActivity());
-                        pricetxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                        pricetxt.setText(cursor.getString(2));
-                        row.addView(productidtxt);
-                        row.addView(nametxt);
-                        row.addView(pricetxt);
+                        urltxt.setGravity(Gravity.CENTER_HORIZONTAL);
+                        urltxt.setText(cursor.getString(0));
+                        TextView titletxt = new TextView(getActivity());
+                        titletxt.setGravity(Gravity.CENTER_HORIZONTAL);
+                        titletxt.setText(cursor.getString(1));
+                        TextView created_attxt = new TextView(getActivity());
+                        created_attxt.setGravity(Gravity.CENTER_HORIZONTAL);
+                        created_attxt.setText(cursor.getString(2));
+                        row.addView(urltxt);
+                        row.addView(titletxt);
+                        row.addView(created_attxt);
                         tablelayout.addView(row);
 
                         // メッセージ設定
@@ -293,7 +272,6 @@ public class AddRssActivity extends Activity {
             // メッセージ表示
             label.setText(message);
         }
-		}
     }   
   //ここまでDBサンプルから転記・改造
  }
