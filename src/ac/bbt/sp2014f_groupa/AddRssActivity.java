@@ -1,6 +1,5 @@
 package ac.bbt.sp2014f_groupa;
 
-import ac.bbt.sp2014f_groupa.MainActivity.PlaceholderFragment;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -31,7 +30,7 @@ public class AddRssActivity extends Activity {
 		// スーパークラスのonCreateメソッド呼び出し
     	super.onCreate(savedInstanceState);
         // レイアウト設定ファイルの指定
-    	setContentView(R.layout.activity_main);
+    	setContentView(R.layout.activity_rss);
         // フラグメントの設定
     	if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
@@ -48,17 +47,40 @@ public class AddRssActivity extends Activity {
             // 初期化とダミーデータの追加を行う
             helper.initTables();
             helper.initDummyData();
+        
         }
-    }
-
+     }
+	// onOptionsItemSelectedメソッド(オプションメニュー選択)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	// オプションメニューID取得
+        int id = item.getItemId();
+        // オプションメニュー判定
+        if (id == R.id.action_settings) {
+            return true;
+        }
+        // スーパークラスのonOptionsItemSelectedメソッド呼び出し
+        return super.onOptionsItemSelected(item);
+    }    
     
 //ここからDBサンプルから転記・改造
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-    	// フラグメント設定情報取得
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        
-        // 登録ボタンのクリックリスナー設定
+    // フラグメントクラス定義
+    public static class PlaceholderFragment extends Fragment {
+    	
+    	CreateProductHelper helper = null;
+    	SQLiteDatabase db = null;
+
+        public PlaceholderFragment() {
+        }
+
+        // onCreateViewメソッド(フラグメント初期表示イベントハンドラ)
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                Bundle savedInstanceState) {
+        	// フラグメント設定情報取得
+            View rootView = inflater.inflate(R.layout.fragment_rss, container, false);
+            
+            // 登録ボタンのクリックリスナー設定
         Button insertBtn = (Button)rootView.findViewById(R.id.bt_insert);
         insertBtn.setTag("insert");
         insertBtn.setOnClickListener(new ButtonClickListener());
@@ -84,16 +106,16 @@ public class AddRssActivity extends Activity {
     class ButtonClickListener implements OnClickListener {
         // onClickメソッド(ボタンクリック時イベントハンドラ)
         public void onClick(View v){
-            // タグの取得
+            // タsグの取得
             String tag = (String)v.getTag();
 
             // メッセージ表示用
             String message  = "";
             TextView label = (TextView)getActivity().findViewById(R.id.tv_message);
             // 入力情報取得
-            EditText url = (EditText)getActivity().findViewById(R.id.et_id);
+            EditText url = (EditText)getActivity().findViewById(R.id.et_url);
             EditText title = (EditText)getActivity().findViewById(R.id.et_title);
-            EditText created_at = (EditText)getActivity().findViewById(R.id.et_url);
+            EditText created_at = (EditText)getActivity().findViewById(R.id.et_created_at);
 
             // テーブルレイアウトオブジェクト取得
             TableLayout tablelayout = (TableLayout)getActivity().findViewById(R.id.tl_list);
@@ -274,4 +296,7 @@ public class AddRssActivity extends Activity {
         }
     }   
   //ここまでDBサンプルから転記・改造
- }
+    }
+}
+
+    
