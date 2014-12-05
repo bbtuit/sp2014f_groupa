@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Sp2014f_GroupA</string>
-    <string name="hello_world">ハロー グループA!</string>
+    <string name="hello_world">Smart RSS</string>
     <string name="action_settings">Settings</string>
     <string name="tv_url">登録RSSのURL：</string>
     <string name="tv_title">RSS名称</string>
@@ -12,4 +12,5 @@
     <string name="bt_update">更新</string>
     <string name="bt_delete">削除</string>
     <string name="bt_display">表示</string>
+    <string name="bt_addRSS">RSS登録</string>
 </resources>

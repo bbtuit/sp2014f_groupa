@@ -3,6 +3,7 @@ package ac.bbt.sp2014f_groupa;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.os.Build;
 
 public class MainActivity extends Activity {
@@ -76,10 +79,31 @@ public class MainActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             
             helper = SQLiteHelper.getInstance();
+            
+            //ここからなべさん
 
+            // ボタンオブジェクト取得
+            Button button = (Button)rootView.findViewById(R.id.bt_addRSS);
+            // ボタンオブジェクトにクリックリスナー設定
+            button.setOnClickListener(new ButtonClickListener());
+            
+            //ここまでなべさん
             return rootView;
         }
-    }
-    //ここからなべさん
-    //ここまでなべさん
+        //ここからなべさん
+        
+        // ボタンクリックリスナー定義
+        class ButtonClickListener implements OnClickListener {
+            // onClickメソッド(ボタンクリック時イベントハンドラ)
+            public void onClick(View v) {
+                // インテントの生成(呼び出すクラスの指定)
+                Intent intent = new Intent(getActivity(), AddRssActivity.class);
+
+                // 次のアクティビティの起動
+                startActivity(intent);
+            }
+        }
+        //ここまでなべさん
+
+     }
 }
