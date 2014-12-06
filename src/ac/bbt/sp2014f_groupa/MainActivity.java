@@ -1,8 +1,9 @@
 package ac.bbt.sp2014f_groupa;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -14,10 +15,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
-import android.os.Build;
 
 public class MainActivity extends Activity {
 
@@ -47,7 +46,6 @@ public class MainActivity extends Activity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -72,18 +70,27 @@ public class MainActivity extends Activity {
      */
     public static class PlaceholderFragment extends Fragment {
     	SQLiteHelper helper = null;
-    	SQLiteDatabase db = null;
-
-        public PlaceholderFragment() {
+    	SQLiteDatabase db = null;   	
+    	private TextView mTitle;
+		private Activity view;
+    	
+        public PlaceholderFragment() { 	
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            helper = SQLiteHelper.getInstance();
+            //ここからなべさん
+
+            // ボタンオブジェクト取得
+            Button button = (Button)rootView.findViewById(R.id.bt_addRSS);
+            // ボタンオブジェクトにクリックリスナー設定
+            button.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
             
-            //ここから高場さん
+            //ここまでなべさん            
+            /* helper = SQLiteHelper.getInstance(); */  
+        
             // DB(読出用)のオブジェクト生成
         	SQLiteDatabase db = helper.getWritableDatabase();        	
         	/* DBデータ一覧表示 */
@@ -102,29 +109,18 @@ public class MainActivity extends Activity {
                 	}
                 	cursor.close();
                 	db.close();        
-                	// 画面表示：以下の画面、エラー取れない為、コメントアウトｂｙなべさん
-                	//mTitle = (TextView) view.findViewById(R.id.item_title);
+                	// 画面表示
+                	mTitle = (TextView) view.findViewById(R.id.LinearLayout1);
                 }
                 catch(SQLException e) 
                 {
                 	Log.e("TAG", "SQLExcepption:"+e.toString()); 
-                }
-            }        
-
-            //ここまで高場さん
-            
-            //ここからなべさん
-
-            // ボタンオブジェクト取得
-            Button button = (Button)rootView.findViewById(R.id.bt_addRSS);
-            // ボタンオブジェクトにクリックリスナー設定
-            button.setOnClickListener(new ButtonClickListener());
-            
-            //ここまでなべさん
-            return rootView;
-        }
+                }               
+            }
+              return rootView;
+              
+            }
         //ここからなべさん
-        
         // ボタンクリックリスナー定義
         class ButtonClickListener implements OnClickListener {
             // onClickメソッド(ボタンクリック時イベントハンドラ)
@@ -134,9 +130,16 @@ public class MainActivity extends Activity {
 
                 // 次のアクティビティの起動
                 startActivity(intent);
-            }
-        }
         //ここまでなべさん
+        }
 
-     }
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				
+			}
+        }
+    }
 }
+
+
