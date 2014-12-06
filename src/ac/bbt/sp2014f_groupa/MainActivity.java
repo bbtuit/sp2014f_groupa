@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.os.Build;
 
 public class MainActivity extends Activity {
@@ -77,8 +81,37 @@ public class MainActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            
             helper = SQLiteHelper.getInstance();
+            
+            //ここから高場さん
+            // DB(読出用)のオブジェクト生成
+        	SQLiteDatabase db = helper.getWritableDatabase();        	
+        	/* DBデータ一覧表示 */
+            if (db != null) 
+            {
+                try
+                {
+                	// SQL文の実行
+                	Cursor cursor = db.rawQuery("select * from rsses",null);
+                	// カーソル開始位置を先頭にする
+                	cursor.moveToFirst();
+                	// DBデータ取得         
+                	for (int i = 0; i < cursor.getCount(); i++) {
+                		String mTitle = cursor.getString(2);
+                		cursor.moveToNext();
+                	}
+                	cursor.close();
+                	db.close();        
+                	// 画面表示：以下の画面、エラー取れない為、コメントアウトｂｙなべさん
+                	//mTitle = (TextView) view.findViewById(R.id.item_title);
+                }
+                catch(SQLException e) 
+                {
+                	Log.e("TAG", "SQLExcepption:"+e.toString()); 
+                }
+            }        
+
+            //ここまで高場さん
             
             //ここからなべさん
 
