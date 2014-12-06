@@ -22,5 +22,6 @@
         android:layout_below="@+id/textView1"
         android:layout_marginTop="40dp"
         android:text="@string/bt_addRSS" />
+    
 
 </RelativeLayout>
