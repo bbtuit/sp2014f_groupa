@@ -18,11 +18,5 @@
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:text="@string/bt_addRSS"/>
-
-    <Button
-		android:id="@+id/bt_addRSS_B"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/bt_addRSS"/>
     
 </RelativeLayout>
