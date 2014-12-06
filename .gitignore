@@ -29,3 +29,4 @@ proguard/
 .classpath
 .project
 .settings/
+/lint.xml
