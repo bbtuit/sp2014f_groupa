@@ -9,14 +9,28 @@
     tools:context="ac.bbt.sp2014f_groupa.MainActivity$PlaceholderFragment" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+    <!-- リストビュー -->
+    <ListView
+        android:id="@+id/android:list"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    <!-- リストが空のときに表示 -->
+    <TextView
+        android:id="@android:id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     
     <Button
-		android:id="@+id/bt_addRSS"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="@string/bt_addRSS"/>
-    
+        android:id="@+id/bt_addRSS"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="40dp"
+        android:text="@string/bt_addRSS" />
+
 </RelativeLayout>
