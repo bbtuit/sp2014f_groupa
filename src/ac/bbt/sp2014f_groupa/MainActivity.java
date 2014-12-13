@@ -2,8 +2,6 @@ package ac.bbt.sp2014f_groupa;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -14,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
@@ -77,7 +76,7 @@ public class MainActivity extends Activity {
         public PlaceholderFragment() { 	
         }
 
-        @Override
+		@Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
@@ -89,10 +88,10 @@ public class MainActivity extends Activity {
             button.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
             
             //ここまでなべさん            
-            /* helper = SQLiteHelper.getInstance(); */  
+            helper = SQLiteHelper.getInstance();
         
             // DB(読出用)のオブジェクト生成
-        	SQLiteDatabase db = helper.getWritableDatabase();        	
+        	db = helper.getWritableDatabase();        	
         	/* DBデータ一覧表示 */
             if (db != null) 
             {
@@ -110,16 +109,16 @@ public class MainActivity extends Activity {
                 	cursor.close();
                 	db.close();        
                 	// 画面表示
-                	mTitle = (TextView) view.findViewById(R.id.LinearLayout1);
+                	mTitle = (TextView) rootView.findViewById(R.id.textView1);
                 }
                 catch(SQLException e) 
                 {
                 	Log.e("TAG", "SQLExcepption:"+e.toString()); 
                 }               
             }
-              return rootView;
-              
-            }
+            return rootView;
+        }
+
         //ここからなべさん
         // ボタンクリックリスナー定義
         class ButtonClickListener implements OnClickListener {
@@ -130,16 +129,8 @@ public class MainActivity extends Activity {
 
                 // 次のアクティビティの起動
                 startActivity(intent);
-        //ここまでなべさん
-        }
-
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
-				
-			}
+            //ここまでなべさん
+            }
         }
     }
 }
-
-
