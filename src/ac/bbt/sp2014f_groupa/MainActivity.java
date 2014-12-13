@@ -103,7 +103,7 @@ public class MainActivity extends Activity {
                 	cursor.moveToFirst();
                 	// DBデータ取得         
                 	for (int i = 0; i < cursor.getCount(); i++) {
-                		String mTitle = cursor.getString(2);
+                		String title = cursor.getString(2);
                 		cursor.moveToNext();
                 	}
                 	cursor.close();
