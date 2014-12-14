@@ -1,11 +1,25 @@
 package ac.bbt.sp2014f_groupa;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import com.sun.syndication.feed.synd.SyndEntry;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.io.FeedException;
+import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+@SuppressLint("SimpleDateFormat")
 public class SQLiteHelper extends SQLiteOpenHelper {
     private static SQLiteHelper self;
     public static final String DB_NAME = "dbrss";
@@ -18,6 +32,97 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         SQLiteHelper.self = this;
 
         Log.d("APP", "初期化しました。");
+    }
+    
+    /**
+     * RSSの登録処理
+     */
+    public void insertRSS(URL url) {
+    	Log.d("APP", "Feedの登録処理を開始します");
+    	try {
+            SyndFeed feed = this.getRSS(url);
+    	Log.d("APP", "Feed test");
+
+            // トランザクション制御開始
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.beginTransaction();
+            
+            // 日付の取得
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            // 登録データ設定
+            ContentValues val = new ContentValues();
+            val.put("url", feed.getUri());
+            val.put("title", feed.getTitle());
+            val.put("created_at", sdf.format(now));
+
+            // データ登録
+            db.insert("rsses", null, val);
+
+            // コミット
+            db.setTransactionSuccessful();
+
+            // トランザクション制御終了
+            db.endTransaction();
+
+            Log.d("APP", "Feedの登録に成功しました（URL:" + url + "）");
+    	} catch (Exception e) {
+    		Log.e(
+    				"APP"
+    				, "フィードの登録に失敗しました(URL: "
+    					+ url
+    					+ ")"
+    				);
+    		Log.e("APP", e.getClass().getName());
+    		Log.e("APP", e.getMessage());
+    	}
+    }
+
+    /**
+     * RSSの取得処理
+     * 指定されたURLのRSS Feedを取得して返します。
+     * 
+     * @param	url	RSSのURL
+     * @return	値取得済みのSyndFeed
+     * @throws IOException 
+     * @throws FeedException 
+     * @throws IllegalArgumentException 
+     */
+    public SyndFeed getRSS(URL url)
+    		throws
+    			IOException
+    			, IllegalArgumentException
+    			, FeedException
+    {
+    	Log.d("APP", "Feedの取得処理を開始します");
+
+		// SyndFeedInputの生成
+		SyndFeedInput input = new SyndFeedInput();
+		Reader reader = null;
+        SyndFeed feed = null;
+		
+        try {
+            // フィードの取得
+            reader = new XmlReader(url.openStream());
+            feed = input.build(reader);
+        } catch (IOException e) {
+        	Log.e("APP", "URLからデータの読み込みに失敗しました");
+        	Log.e("APP", e.getMessage());
+        	throw e;
+        } catch (IllegalArgumentException e) {
+        	Log.e("APP", "IllegalArgumentExceptionが発生しました");
+        	Log.e("APP", e.getMessage());
+        	throw e;
+        } catch (FeedException e) {
+        	Log.e("APP", "FeedExceptionが発生しました");
+        	Log.e("APP", e.getMessage());
+        	throw e;
+        }
+        
+        Log.d("APP", "Feedの取得に成功しました");
+		
+		return feed;
     }
 
     @Override
