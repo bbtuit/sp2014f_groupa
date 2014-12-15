@@ -260,11 +260,15 @@ public class AddRssActivity extends Activity {
         }
         //ここまでDBサンプルから転記・改造
 
-        // クリックリスナー定義
+        /**
+         * 登録ボタンが押下された時の処理
+         * 
+         * @author ueharamasato
+         */
         class ButtonInsertClickListener implements OnClickListener {
             // onClickメソッド(ボタンクリック時イベントハンドラ)
-            public void onClick(View v){
-            	Log.d("APP", "登録ボタンがクリックされました");
+            public void onClick(View v) {
+            	Log.d("APP", "登録ボタンがクリックされた時の処理を実行します");
 
                 // メッセージ表示用
                 TextView label = (TextView)getActivity().findViewById(R.id.tv_message);
@@ -273,26 +277,38 @@ public class AddRssActivity extends Activity {
                 EditText etURL = (EditText)getActivity().findViewById(R.id.et_url);
                 String url_string = etURL.getText().toString();
                 
+                // RSS URLが既に登録されていないかをチェック
                 SQLiteHelper helper = SQLiteHelper.getInstance();
                 boolean isDup = helper.isRssUrlDuplicated(url_string);
                 
                 if (isDup) {
+                	// 既に登録されていたので処理をキャンセルします。
 					label.setText("そのURLは既に登録されています");
 					return;
                 }
 
                 try {
+                	
+                	// RSS Feedを取得します。
 					URL url = new URL(url_string);
 					
+					// ネットへのリクエストは非同期で実行する必要があるので、
+					// 非同期処理をしてくれるクラスに処理を行ってもらいます。
 					AsyncGetRSSRequest task = new AsyncGetRSSRequest(getActivity());
 					task.execute(url);
 					
+				} catch (MalformedURLException e) {
+					Log.e("APP", "URL の記述書式が間違っています");
+					Log.e("APP", e.getMessage());
+
+					label.setText("正しい URL を指定してください");
 				} catch (Exception e) {
-					Log.e("APP", "RSSの登録に失敗しました");
+					Log.e("APP", "予期しないエラーにより、RSSの登録に失敗しました。エラーメッセージを確認して不具合を修正してください。");
 					Log.e("APP", e.getMessage());
 					label.setText("登録に失敗しました");
 				}
 
+            	Log.d("APP", "登録ボタンがクリックされた時の処理を実行が完了しました");
             }
         }
     }
