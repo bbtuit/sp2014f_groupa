@@ -13,7 +13,7 @@
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:columnCount="2" >
+        android:columnCount="3" >
 
         <TextView
             android:id="@+id/textView1"
@@ -29,6 +29,14 @@
             android:layout_marginTop="40dp"
             android:text="@string/bt_addRSS" />
 
+        <Button
+            android:id="@+id/bt_read_later"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="40dp"
+            android:text="@string/bt_read_later" />
+        
     </GridLayout>
 
     <!-- リストビュー -->

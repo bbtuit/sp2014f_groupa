@@ -86,7 +86,12 @@ public class MainActivity extends Activity {
             Button button = (Button)rootView.findViewById(R.id.bt_addRSS);
             // ボタンオブジェクトにクリックリスナー設定
             button.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
-            
+
+            // ボタンオブジェクト取得
+            Button button2 = (Button)rootView.findViewById(R.id.bt_read_later);
+            // ボタンオブジェクトにクリックリスナー設定
+            button.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
+
             //ここまでなべさん            
             helper = SQLiteHelper.getInstance();
         
@@ -126,11 +131,17 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 // インテントの生成(呼び出すクラスの指定)
                 Intent intent = new Intent(getActivity(), AddRssActivity.class);
-
                 // 次のアクティビティの起動
                 startActivity(intent);
+            }
+            public void onClick1(View v) {
+ 
+                // インテントの生成(呼び出すクラスの指定)
+                Intent intent2 = new Intent(getActivity(), ReadLater.class);
+                // 次のアクティビティの起動
+                startActivity(intent2);               
+            }                
             //ここまでなべさん
             }
         }
     }
-}
