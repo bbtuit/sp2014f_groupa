@@ -133,29 +133,32 @@ public class SQLiteHelper extends SQLiteOpenHelper {
      * RSS URLの重複をチェックする
      * 
      * @param	url	チェックするURL
-     * @return	重複している true, それ以外は false を返す。
+     * @return	重複している時は true, それ以外は false を返す。
      */
     public boolean isRssUrlDuplicated(String url) {
     	Log.d("APP", "RSSの重複チェックを開始します（URL:" + url + "）");
     	boolean result = false;
     	
+    	// URLの登録数を取得します
+    	int cnt = 0;
     	SQLiteDatabase db = this.getReadableDatabase();
-    	
     	Cursor cursor = db.rawQuery("SELECT COUNT(id) FROM rsses WHERE url=? GROUP BY url", new String[] {url});
-
     	if (cursor.getCount() > 0) {
+    		// SQLiteではWHERE句の条件にマッチしない場合、0を返さずに0行のデータを返してくるので、
+    		// 何行帰ってくるかをチェックし、0行以外の時だけ値を取得するようにします
             cursor.moveToLast();
-            int cnt = cursor.getInt(0);
-            
-            if (cnt > 0) {
-                result = true;
-                Log.d("APP", "RSSは重複しています");
-            } else {
-                Log.d("APP", "RSSは重複してません");
-            }
-    	} else {
-    		Log.d("APP", "RSSは重複してません");
+            cnt = cursor.getInt(0);
     	}
+
+    	// URLの登録数をチェックします
+        if (cnt == 0) {
+        	// 登録がひとつもありません
+            Log.d("APP", "RSSは重複してません");
+        } else {
+        	// 1以上の登録があります
+            result = true;
+            Log.d("APP", "RSSは重複しています");
+        }
 
     	return result;
     }
