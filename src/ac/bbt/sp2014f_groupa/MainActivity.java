@@ -90,7 +90,7 @@ public class MainActivity extends Activity {
             // ボタンオブジェクト取得
             Button button2 = (Button)rootView.findViewById(R.id.bt_read_later);
             // ボタンオブジェクトにクリックリスナー設定
-            button.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
+            button2.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
 
             //ここまでなべさん            
             helper = SQLiteHelper.getInstance();
