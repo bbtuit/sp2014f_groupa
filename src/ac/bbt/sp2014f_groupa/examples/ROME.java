@@ -4,11 +4,13 @@ import java.io.Reader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
+
 import android.annotation.SuppressLint;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 
 /**
  * ROME 1.0.0 - RSS取得ライブラリの使用サンプル
@@ -43,7 +45,8 @@ public class ROME {
 		
 		try {
 			// フィードの取得
-            URL url = new URL("http://rss.asahi.com/rss/asahi/newsheadlines.rdf");
+            //URL url = new URL("http://rss.asahi.com/rss/asahi/newsheadlines.rdf");
+            URL url = new URL("http://www.engadget.com/rss.xml");
             reader = new XmlReader(url.openStream());
             SyndFeed feed = input.build(reader);
             

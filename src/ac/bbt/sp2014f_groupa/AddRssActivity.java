@@ -267,24 +267,32 @@ public class AddRssActivity extends Activity {
             	Log.d("APP", "登録ボタンがクリックされました");
 
                 // メッセージ表示用
-                String message  = "登録に成功しました";
                 TextView label = (TextView)getActivity().findViewById(R.id.tv_message);
 
+                // 入力情報取得
+                EditText etURL = (EditText)getActivity().findViewById(R.id.et_url);
+                String url_string = etURL.getText().toString();
+                
+                SQLiteHelper helper = SQLiteHelper.getInstance();
+                boolean isDup = helper.isRssUrlDuplicated(url_string);
+                
+                if (isDup) {
+					label.setText("そのURLは既に登録されています");
+					return;
+                }
+
                 try {
-                    // 入力情報取得
-                    EditText etURL = (EditText)getActivity().findViewById(R.id.et_url);
-					URL url = new URL(etURL.getText().toString());
+					URL url = new URL(url_string);
 					
-					SQLiteHelper helper = SQLiteHelper.getInstance();
+					AsyncGetRSSRequest task = new AsyncGetRSSRequest(getActivity());
+					task.execute(url);
 					
-					helper.insertRSS(url);
 				} catch (Exception e) {
 					Log.e("APP", "RSSの登録に失敗しました");
 					Log.e("APP", e.getMessage());
-					message = "登録に失敗しました";
+					label.setText("登録に失敗しました");
 				}
 
-                label.setText(message);
             }
         }
     }

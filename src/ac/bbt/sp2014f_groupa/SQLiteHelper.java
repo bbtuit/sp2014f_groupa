@@ -6,11 +6,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import com.sun.syndication.feed.synd.SyndEntry;
-import com.sun.syndication.feed.synd.SyndFeed;
-import com.sun.syndication.io.FeedException;
-import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
+
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
+import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -37,11 +38,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     /**
      * RSSの登録処理
      */
-    public void insertRSS(URL url) {
+    public long insertRSS(URL url) {
     	Log.d("APP", "Feedの登録処理を開始します");
+    	
+    	long id = 0;
     	try {
             SyndFeed feed = this.getRSS(url);
-    	Log.d("APP", "Feed test");
 
             // トランザクション制御開始
             SQLiteDatabase db = this.getWritableDatabase();
@@ -53,12 +55,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
             // 登録データ設定
             ContentValues val = new ContentValues();
-            val.put("url", feed.getUri());
+            val.put("url", url.toString());
             val.put("title", feed.getTitle());
             val.put("created_at", sdf.format(now));
 
             // データ登録
-            db.insert("rsses", null, val);
+            id = db.insert("rsses", null, val);
 
             // コミット
             db.setTransactionSuccessful();
@@ -77,6 +79,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     		Log.e("APP", e.getClass().getName());
     		Log.e("APP", e.getMessage());
     	}
+    	
+    	return id;
     }
 
     /**
@@ -123,6 +127,37 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         Log.d("APP", "Feedの取得に成功しました");
 		
 		return feed;
+    }
+    
+    /**
+     * RSS URLの重複をチェックする
+     * 
+     * @param	url	チェックするURL
+     * @return	重複している true, それ以外は false を返す。
+     */
+    public boolean isRssUrlDuplicated(String url) {
+    	Log.d("APP", "RSSの重複チェックを開始します（URL:" + url + "）");
+    	boolean result = false;
+    	
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	
+    	Cursor cursor = db.rawQuery("SELECT COUNT(id) FROM rsses WHERE url=? GROUP BY url", new String[] {url});
+
+    	if (cursor.getCount() > 0) {
+            cursor.moveToLast();
+            int cnt = cursor.getInt(0);
+            
+            if (cnt > 0) {
+                result = true;
+                Log.d("APP", "RSSは重複しています");
+            } else {
+                Log.d("APP", "RSSは重複してません");
+            }
+    	} else {
+    		Log.d("APP", "RSSは重複してません");
+    	}
+
+    	return result;
     }
 
     @Override
