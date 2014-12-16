@@ -13,7 +13,7 @@ import android.widget.TextView;
  * 非同期でRSS Feedを読み込むクラス
  * @author Uehara Masato
  */
-public class AsyncGetRSSRequest extends AsyncTask<URL, Void, String> {
+public class AsyncInsertRssRequest extends AsyncTask<URL, Void, String> {
     private Activity mainActivity;
 
     /**
@@ -21,7 +21,7 @@ public class AsyncGetRSSRequest extends AsyncTask<URL, Void, String> {
      *  
      * @param activity	呼び出し元のActivity
      */
-    public AsyncGetRSSRequest(Activity activity) {
+    public AsyncInsertRssRequest(Activity activity) {
         // 呼び出し元のアクティビティ
         this.mainActivity = activity;
     }
@@ -47,7 +47,7 @@ public class AsyncGetRSSRequest extends AsyncTask<URL, Void, String> {
             
         	Log.d("APP", "URL: " + url + " を処理します");
             // URLを登録
-            id = helper.insertRSS(url);
+            id = helper.insertRss(url);
             
             // idから登録されたデータを取得する
             cursor = db.query(

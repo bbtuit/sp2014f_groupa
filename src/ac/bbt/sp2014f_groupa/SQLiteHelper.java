@@ -6,7 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
+import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndEntry;
 import com.google.code.rome.android.repackaged.com.sun.syndication.feed.synd.SyndFeed;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedException;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
@@ -37,13 +39,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     
     /**
      * RSSの登録処理
+     * この処理ではRSSの登録と同時に記事データの登録も同時に行います。
+     * この処理の中ではRSSの重複チェックは行わないので、
+     * 予め重複チェックを実施して重複を回避するようにしてください。
+     * 
+     * @param	url	登録したいRSS FeedのURL
+     * @return 	登録したrssesテーブルのid
+     * @see isRssUrlDuplicated(URL)
      */
-    public long insertRSS(URL url) {
+    public long insertRss(URL url) {
     	Log.d("APP", "Feedの登録処理を開始します");
     	
     	long id = 0;
     	try {
-            SyndFeed feed = this.getRSS(url);
+            SyndFeed feed = this.fetchRssFromInternet(url);
 
             // トランザクション制御開始
             SQLiteDatabase db = this.getWritableDatabase();
@@ -59,8 +68,11 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             val.put("title", feed.getTitle());
             val.put("created_at", sdf.format(now));
 
-            // データ登録
+            // RSSデータ登録
             id = db.insert("rsses", null, val);
+            
+            // 記事データの登録
+            this.insertArticles(id, feed);
 
             // コミット
             db.setTransactionSuccessful();
@@ -80,6 +92,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     		Log.e("APP", e.getMessage());
     	}
     	
+    	Log.d("APP", "Feedの登録処理を終了します");
+
     	return id;
     }
 
@@ -93,7 +107,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
      * @throws FeedException 
      * @throws IllegalArgumentException 
      */
-    public SyndFeed getRSS(URL url)
+    public SyndFeed fetchRssFromInternet(URL url)
     		throws
     			IOException
     			, IllegalArgumentException
@@ -159,10 +173,119 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             result = true;
             Log.d("APP", "RSSは重複しています");
         }
+    	Log.d("APP", "RSSの重複チェックを終了します（URL:" + url + "）");
 
     	return result;
     }
+    
+    /**
+     * 記事 URLの重複をチェックする
+     * 
+     * @param	url	チェックするURL
+     * @return	重複している時は true, それ以外は false を返す。
+     */
+    public boolean isArticleUrlDuplicated(String url) {
+    	Log.d("APP", "記事の重複チェックを開始します（URL:" + url + "）");
+    	boolean result = false;
+    	
+    	// URLの登録数を取得します
+    	int cnt = 0;
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	Cursor cursor = db.rawQuery("SELECT COUNT(id) FROM articles WHERE url=? GROUP BY url", new String[] {url});
+    	if (cursor.getCount() > 0) {
+    		// SQLiteではWHERE句の条件にマッチしない場合、0を返さずに0行のデータを返してくるので、
+    		// 何行帰ってくるかをチェックし、0行以外の時だけ値を取得するようにします
+            cursor.moveToLast();
+            cnt = cursor.getInt(0);
+    	}
 
+    	// URLの登録数をチェックします
+        if (cnt == 0) {
+        	// 登録がひとつもありません
+            Log.d("APP", "記事は重複してません");
+        } else {
+        	// 1以上の登録があります
+            result = true;
+            Log.d("APP", "記事は重複しています");
+        }
+    	Log.d("APP", "記事の重複チェックを終了します（URL:" + url + "）");
+
+    	return result;
+    }
+    
+    /**
+     * 指定されたrss_idのRSS Feedを取得し記事を更新する。
+     *
+     * @param rss_id
+     */
+    public void updateRssArticles(long rss_id) {
+    	SQLiteDatabase db = this.getReadableDatabase();
+    	Cursor cursor = db.query(
+    			"rsses"
+    			, new String[] {"url"}
+    			, "id=?"
+    			, new String[] {String.valueOf(rss_id)}
+    			, null
+    			, null
+    			, null
+    			);
+        cursor.moveToFirst();
+        String url = cursor.getString(0);
+    }
+
+    /**
+     * SyndFeedからarticlesテーブルに記事を追加する
+     * 
+     * @param	rss_id		rssテーブルの該当データのID(rsses.id)
+     * @param	synd_feed	取得済みのSyndFeed
+     */
+    public void insertArticles(long rss_id, SyndFeed synd_feed) {
+    	Log.d("APP", "記事の登録処理を開始します");
+
+    	try {
+            // トランザクション制御開始
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.beginTransaction();
+            
+            // 日付の取得
+            Date now = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            for (SyndEntry entry : (List<SyndEntry>) synd_feed.getEntries()) {
+            	if (this.isArticleUrlDuplicated(entry.getUri())) {
+            		// 記事が重複している場合は処理をパスする
+            		Log.d("APP", "記事の重複しているので処理をパスします（URL:"+entry.getUri()+"）");
+            		continue;
+            	}
+
+                // 登録データ設定
+                ContentValues val = new ContentValues();
+                val.put("rss_id", String.valueOf(rss_id));
+                val.put("url", entry.getUri());
+                val.put("title", entry.getTitle());
+                val.put("published_at", sdf.format(entry.getPublishedDate()));
+                val.put("created_at", sdf.format(now));
+
+                // データ登録
+                db.insert("articles", null, val);
+            }
+
+            // コミット
+            db.setTransactionSuccessful();
+
+            // トランザクション制御終了
+            db.endTransaction();
+
+            Log.d("APP", "記事の登録に成功しました（登録件数： " + synd_feed.getEntries().size() + " 件）");
+    	} catch (Exception e) {
+    		Log.e("APP", "記事の登録に失敗しました");
+    		Log.e("APP", e.getClass().getName());
+    		Log.e("APP", e.getMessage());
+    	}
+
+    	Log.d("APP", "記事の登録処理を終了します");
+    }
+    
     @Override
     public void onCreate(SQLiteDatabase arg0) {
         // TODO Auto-generated method stub

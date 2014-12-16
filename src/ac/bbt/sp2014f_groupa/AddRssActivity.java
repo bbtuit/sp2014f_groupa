@@ -294,7 +294,7 @@ public class AddRssActivity extends Activity {
 					
 					// ネットへのリクエストは非同期で実行する必要があるので、
 					// 非同期処理をしてくれるクラスに処理を行ってもらいます。
-					AsyncGetRSSRequest task = new AsyncGetRSSRequest(getActivity());
+					AsyncInsertRssRequest task = new AsyncInsertRssRequest(getActivity());
 					task.execute(url);
 					
 				} catch (MalformedURLException e) {
