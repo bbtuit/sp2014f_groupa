@@ -85,14 +85,14 @@ public class MainActivity extends Activity {
             //ここからなべさん
 
             // ボタンオブジェクト取得
-            Button button = (Button)rootView.findViewById(R.id.bt_addRSS);
+            Button addRss = (Button)rootView.findViewById(R.id.bt_addRSS);
             // ボタンオブジェクトにクリックリスナー設定
-            button.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
+            addRss.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
 
             // ボタンオブジェクト取得
-            Button button2 = (Button)rootView.findViewById(R.id.bt_read_later);
+            Button readLater = (Button)rootView.findViewById(R.id.bt_read_later);
             // ボタンオブジェクトにクリックリスナー設定
-            button2.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
+            readLater.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener2());
 
             //ここまでなべさん            
             helper = SQLiteHelper.getInstance();
@@ -147,14 +147,25 @@ public class MainActivity extends Activity {
                 // 次のアクティビティの起動
                 startActivity(intent);
             }
+        }
+        // ボタンクリックリスナー定義
+        class ButtonClickListener2 implements OnClickListener {
+            // onClickメソッド(ボタンクリック時イベントハンドラ)
+        
             public void onClick1(View v) {
- 
                 // インテントの生成(呼び出すクラスの指定)
                 Intent intent2 = new Intent(getActivity(), ReadLater.class);
                 // 次のアクティビティの起動
                 startActivity(intent2);               
             }                
             //ここまでなべさん
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				
+			}
             }
         }
-    }
+}
+
