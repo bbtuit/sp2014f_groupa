@@ -60,6 +60,8 @@ public class ROME {
             	System.out.println(entry.getTitle());
             	// エントリの日付
             	System.out.println(sdf.format(entry.getPublishedDate()));
+            	System.out.println(entry.getLink());
+            	System.out.println(entry.getUri());
             	System.out.println("");
             	
             	// 概要（最初の５０文字だけ表示）
