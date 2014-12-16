@@ -14,7 +14,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -96,32 +98,43 @@ public class MainActivity extends Activity {
             helper = SQLiteHelper.getInstance();
         
             // DB(読出用)のオブジェクト生成
-        	db = helper.getWritableDatabase();        	
-        	/* DBデータ一覧表示 */
-            if (db != null) 
-            {
-                try
-                {
-                	// SQL文の実行
-                	Cursor cursor = db.rawQuery("select * from rsses",null);
-                	// カーソル開始位置を先頭にする
-                	cursor.moveToFirst();
-                	// DBデータ取得         
-                	for (int i = 0; i < cursor.getCount(); i++) {
-                		String title = cursor.getString(2);
-                		cursor.moveToNext();
-                	}
-                	cursor.close();
-                	db.close();        
-                	// 画面表示
-                	mTitle = (TextView) rootView.findViewById(R.id.textView1);
-                }
-                catch(SQLException e) 
-                {
-                	Log.e("TAG", "SQLExcepption:"+e.toString()); 
-                }               
-            }
-            return rootView;
+        	db = helper.getWritableDatabase(); 	
+
+			/* DBデータ一覧表示 */
+			if (db != null) {
+				try {
+					// SQL文の実行
+					Cursor cursor = db.rawQuery("select * from rsses", null);
+
+					// ListView初期化
+					ListView list = (ListView) rootView
+							.findViewById(android.R.id.list);
+					ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+							getActivity(), android.R.layout.simple_list_item_1);
+
+					// カーソル開始位置を先頭にする
+					cursor.moveToFirst();
+
+					// DBデータ取得
+					for (int i = 0; i < cursor.getCount(); i++) {
+						// mAdapterにDBから文字列を追加
+						mAdapter.add(cursor.getString(2));
+						cursor.moveToNext();
+					}
+
+					// DBクローズ
+					cursor.close();
+					db.close();
+
+					// リストビューにアダプターをセット
+					list.setAdapter(mAdapter);
+
+				} catch (SQLException e) {
+					Log.e("TAG", "SQLExcepption:" + e.toString());
+				}
+			}
+			return rootView;
+
         }
 
         //ここからなべさん
