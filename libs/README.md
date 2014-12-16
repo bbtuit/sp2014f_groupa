@@ -3,8 +3,8 @@
 
 下記、外部ライブラリを使用しています。
 
-- ROME 1.0.0 - RSS取得ライブラリ
-  http://rometools.github.io/rome/ROMEReleases/ROME1.0Release.html
+- Android ROME Feed Reader 1.0.0-R2 - Android用のRSS取得ライブラリ
+  https://code.google.com/p/android-rome-feed-reader/
   (Depends on JDOM)
-- JDOM v1.1.3 - DOM解析ライブラリ
-  http://www.jdom.org/downloads/index.html
+- JDOM Android Fork v1.1.1 - Android用のDOM解析ライブラリ
+  https://code.google.com/p/android-rome-feed-reader/downloads/detail?name=jdom-1.1.1-android-fork.jar
