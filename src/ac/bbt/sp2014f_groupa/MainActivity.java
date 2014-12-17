@@ -86,13 +86,11 @@ public class MainActivity extends Activity {
 
             // ボタンオブジェクト取得
             Button addRss = (Button)rootView.findViewById(R.id.bt_addRSS);
+            Button readLater = (Button)rootView.findViewById(R.id.bt_read_later);
+
             // ボタンオブジェクトにクリックリスナー設定
             addRss.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
-
-            // ボタンオブジェクト取得
-            Button readLater = (Button)rootView.findViewById(R.id.bt_read_later);
-            // ボタンオブジェクトにクリックリスナー設定
-            readLater.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener2());
+            readLater.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
 
             //ここまでなべさん            
             helper = SQLiteHelper.getInstance();
@@ -142,30 +140,22 @@ public class MainActivity extends Activity {
         class ButtonClickListener implements OnClickListener {
             // onClickメソッド(ボタンクリック時イベントハンドラ)
             public void onClick(View v) {
-                // インテントの生成(呼び出すクラスの指定)
-                Intent intent = new Intent(getActivity(), AddRssActivity.class);
-                // 次のアクティビティの起動
-                startActivity(intent);
-            }
+                switch(v.getId()){
+                case R.id.bt_addRSS:
+                    // インテントの生成(呼び出すクラスの指定)
+                    Intent intent = new Intent(getActivity(), AddRssActivity.class);
+                    // 次のアクティビティの起動
+                    startActivity(intent);
+                    break;
+                case R.id.bt_read_later:
+                    Intent intent1 = new Intent(getActivity(), ReadLater.class);
+                    // 次のアクティビティの起動
+                    startActivity(intent1);
+                    break;
+                }
+           }
         }
-        // ボタンクリックリスナー定義
-        class ButtonClickListener2 implements OnClickListener {
-            // onClickメソッド(ボタンクリック時イベントハンドラ)
-        
-            public void onClick1(View v) {
-                // インテントの生成(呼び出すクラスの指定)
-                Intent intent2 = new Intent(getActivity(), ReadLater.class);
-                // 次のアクティビティの起動
-                startActivity(intent2);               
-            }                
-            //ここまでなべさん
-
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
-			}
-            }
-        }
+    }
 }
+
 

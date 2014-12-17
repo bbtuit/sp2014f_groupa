@@ -17,7 +17,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -73,8 +75,6 @@ public class ReadLater extends Activity {
 	public static class PlaceholderFragment extends Fragment {
 	 	SQLiteHelper helper = null;
     	SQLiteDatabase db = null;   	
-    	private TextView mTitle;
-		private Activity view;
 
 		public PlaceholderFragment() {
 		}
@@ -82,86 +82,43 @@ public class ReadLater extends Activity {
 		@Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_read_later, container, false);
             
             helper = SQLiteHelper.getInstance();
         
-            // DB(読出用)のオブジェクト生成
-        	db = helper.getWritableDatabase();        	
-        	/* DBデータ一覧表示 */
-            if (db != null) 
-            {
-                try
-                {
-                	// SQL文の実行
-                	Cursor cursor = db.rawQuery("select * from to_reads",null);
-                	// カーソル開始位置を先頭にする
-                	cursor.moveToFirst();
-                	// DBデータ取得         
-                	for (int i = 0; i < cursor.getCount(); i++) {
-                		String title = cursor.getString(2);
-                		cursor.moveToNext();
-                	}
-                	cursor.close();
-                	db.close();        
-                	// 画面表示
-                	//mTitle = (TextView) rootView.findViewById(R.id.textView1); ここから2014/12/16
- 
-                    // テーブルレイアウトオブジェクト取得
-                    TableLayout tablelayout = (TableLayout)getActivity().findViewById(R.id.tl_list);
+			/* DBデータ一覧表示 */
+			if (db != null) {
+				try {
+					// SQL文の実行
+					Cursor cursor = db.rawQuery("select * from to_reads", null);
 
-                    // テーブルレイアウトのクリア
-                    tablelayout.removeAllViews();
+					// ListView初期化
+					ListView list = (ListView) rootView
+							.findViewById(android.R.id.list);
+					ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+							getActivity(), android.R.layout.simple_list_item_1);
 
-                	
-                    // テーブルレイアウトの表示範囲を設定
-                    tablelayout.setStretchAllColumns(true);
+					// カーソル開始位置を先頭にする
+					cursor.moveToFirst();
 
-                    // テーブル一覧のヘッダ部設定
-                    TableRow headrow = new TableRow(getActivity());
+					// DBデータ取得
+					for (int i = 0; i < cursor.getCount(); i++) {
+						// mAdapterにDBから文字列を追加
+						mAdapter.add(cursor.getString(1));
+						cursor.moveToNext();
+					}
 
-                    TextView headtxt1 = new TextView(getActivity());
-                    headtxt1.setText("URL");
-                    headtxt1.setGravity(Gravity.CENTER_HORIZONTAL);
-                    headtxt1.setWidth(60);
-                    TextView headtxt2 = new TextView(getActivity());
-                    headtxt2.setText("RSS名");
-                    headtxt2.setGravity(Gravity.CENTER_HORIZONTAL);
-                    headtxt2.setWidth(100);
-                    TextView headtxt3 = new TextView(getActivity());
-                    headtxt3.setText("登録日");
-                    headtxt3.setGravity(Gravity.CENTER_HORIZONTAL);
-                    headtxt3.setWidth(60);
-                    headrow.addView(headtxt1);
-                    headrow.addView(headtxt2);
-                    headrow.addView(headtxt3);
-                    tablelayout.addView(headrow);
+					// DBクローズ
+					cursor.close();
+					db.close();
 
-                    // 取得したデータをテーブル明細部に設定
-                    while(cursor.moveToNext()){
+					// リストビューにアダプターをセット
+					list.setAdapter(mAdapter);
 
-                        TableRow row = new TableRow(getActivity());
-                        TextView urltxt
-                                = new TextView(getActivity());
-                        urltxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                        urltxt.setText(cursor.getString(0));
-                        TextView titletxt = new TextView(getActivity());
-                        titletxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                        titletxt.setText(cursor.getString(1));
-                        TextView created_attxt = new TextView(getActivity());
-                        created_attxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                        created_attxt.setText(cursor.getString(2));
-                        row.addView(urltxt);
-                        row.addView(titletxt);
-                        row.addView(created_attxt);
-                        tablelayout.addView(row);
-                    }
-                }catch(SQLException e) 
-                {
-                	Log.e("TAG", "SQLExcepption:"+e.toString()); 
-                }               
-            }
-   
+				} catch (SQLException e) {
+					Log.e("TAG", "SQLExcepption:" + e.toString());
+				}
+			}
 			return rootView;
 		}
 	}
