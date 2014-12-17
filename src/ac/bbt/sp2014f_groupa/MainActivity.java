@@ -143,7 +143,7 @@ public class MainActivity extends Activity {
                 switch(v.getId()){
                 case R.id.bt_addRSS:
                     // インテントの生成(呼び出すクラスの指定)
-                    Intent intent = new Intent(getActivity(), AddRssActivity.class);
+                    Intent intent = new Intent(getActivity(), AddRss.class);
                     // 次のアクティビティの起動
                     startActivity(intent);
                     break;

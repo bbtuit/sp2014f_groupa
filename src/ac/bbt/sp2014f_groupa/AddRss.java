@@ -22,7 +22,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class AddRssActivity extends Activity {
+public class AddRss extends Activity {
 	// onCreateメソッド(画面初期表示イベントハンドラ)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
