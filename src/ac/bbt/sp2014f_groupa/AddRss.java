@@ -3,6 +3,7 @@ package ac.bbt.sp2014f_groupa;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import ac.bbt.sp2014f_groupa.models.RssModel;
 import android.app.Activity;
 import android.app.Fragment;
 import android.database.sqlite.SQLiteDatabase;
@@ -23,6 +24,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 public class AddRss extends Activity {
+	RssModel rss = null;
+
 	// onCreateメソッド(画面初期表示イベントハンドラ)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -278,8 +281,7 @@ public class AddRss extends Activity {
                 String url_string = etURL.getText().toString();
                 
                 // RSS URLが既に登録されていないかをチェック
-                SQLiteHelper helper = SQLiteHelper.getInstance();
-                boolean isDup = helper.isRssUrlDuplicated(url_string);
+                boolean isDup = RssModel.isUrlExists(url_string);
                 
                 if (isDup) {
                 	// 既に登録されていたので処理をキャンセルします。
@@ -288,13 +290,12 @@ public class AddRss extends Activity {
                 }
 
                 try {
-                	
                 	// RSS Feedを取得します。
 					URL url = new URL(url_string);
 					
 					// ネットへのリクエストは非同期で実行する必要があるので、
 					// 非同期処理をしてくれるクラスに処理を行ってもらいます。
-					AsyncInsertRssRequest task = new AsyncInsertRssRequest(getActivity());
+					AsyncInsertRssRequest task = new AsyncInsertRssRequest((AddRss) getActivity());
 					task.execute(url);
 					
 				} catch (MalformedURLException e) {
@@ -312,6 +313,23 @@ public class AddRss extends Activity {
             }
         }
     }
+
+    /**
+     * このアクティビティで現在扱っているRssModelオブジェクトを返す
+     * @return このアクティビティで現在扱っているRssModelオブジェクト
+     */
+	public RssModel getRss() {
+		return rss;
+	}
+
+    /**
+     * このアクティビティで現在扱っているRssModelオブジェクトをセットする
+     */
+	public void setRss(RssModel rss) {
+		this.rss = rss;
+
+		Log.d("APP", "RssModelオブジェクトがセットされました（Title: " + rss.getTitle() + "）");
+	}
 }
 
     

@@ -2,6 +2,7 @@ package ac.bbt.sp2014f_groupa;
 
 import java.net.URL;
 
+import ac.bbt.sp2014f_groupa.models.RssModel;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,15 +14,15 @@ import android.widget.TextView;
  * 非同期でRSS Feedを読み込むクラス
  * @author Uehara Masato
  */
-public class AsyncInsertRssRequest extends AsyncTask<URL, Void, String> {
-    private Activity mainActivity;
+public class AsyncInsertRssRequest extends AsyncTask<URL, Void, Long> {
+    private AddRss mainActivity;
 
     /**
      * コンストラクタ
      *  
      * @param activity	呼び出し元のActivity
      */
-    public AsyncInsertRssRequest(Activity activity) {
+    public AsyncInsertRssRequest(AddRss activity) {
         // 呼び出し元のアクティビティ
         this.mainActivity = activity;
     }
@@ -29,55 +30,24 @@ public class AsyncInsertRssRequest extends AsyncTask<URL, Void, String> {
     /**
      * 非同期で実行される処理を実装している
      * 
-     * @param urls URLの配列
-     * @return 登録に成功した RSS Feed のタイトルをカンマ区切りで繋げた文字列
+     * @param urls	URLの配列、、なのですが複数指定されることは想定すると実装が難しいので、
+     * 				１つしか指定されない前提で実装しています
+     * @return 登録に成功した RSS Feed のid
      */
     @Override
-    protected String doInBackground(URL... urls) {
+    protected Long doInBackground(URL... urls) {
         Log.d("APP", "RSSの取得・登録の非同期処理を開始します。");
 
-        long id = 0;
-        String titles = "";
-        Cursor cursor = null;
+        Log.d("APP", "URL: " + urls[0] + " を処理します");
+
         SQLiteHelper helper = SQLiteHelper.getInstance();
-        SQLiteDatabase db = helper.getReadableDatabase();
-        
-        // URLが配列で来るのでループで処理する
-        for (URL url: urls) {
+        Long id = Long.valueOf(0L);
+        URL url = urls[0];
+        id = helper.insertRss(url);
             
-        	Log.d("APP", "URL: " + url + " を処理します");
-            // URLを登録
-            id = helper.insertRss(url);
-            
-            // idから登録されたデータを取得する
-            cursor = db.query(
-                    "rsses"
-                    , new String[] {"title"}
-                    , "id=?"
-                    , new String[] {String.valueOf(id)}
-                    , null
-                    , null
-                    , null
-                );
-            cursor.moveToFirst();
-            String title = cursor.getString(0);
-            
-            // 取得したデータからタイトルを連結する
-            // a, b, cといった形にしたいので、最初のひとつ目以降はタイトルの前にカンマを付けて連結する
-            if (titles.length()>0) {
-                // 文字列の長さ0より大きいので、２つ目以降のタイトル
-                titles += ", " + title;
-            } else {
-                // 文字列の長さ0なので、最初のタイトル
-                titles = title;
-            }
-
-        	Log.d("APP", "URL: " + url + " の処理が完了しました（title: " + title + "）");
-        }
-
         Log.d("APP", "RSSの取得・登録の非同期処理が終了しました。");
 
-    	return titles;
+    	return id;
     }
 
 
@@ -87,13 +57,28 @@ public class AsyncInsertRssRequest extends AsyncTask<URL, Void, String> {
      * 
      * ここでは登録完了時に、Viewのラベルに登録成功メッセージを表示している
      * 
-     * @param result doInBackgroundの戻り値が渡されます
+     * @param id doInBackgroundの戻り値が渡されます
      * @see doInBackground(URL... urls)
      */
     @Override
-    protected void onPostExecute(String result) {
-    	// 更新結果をラベルに表示
+    protected void onPostExecute(Long id) {
+    	Log.d("APP", "Rss登録処理の後処理を開始します");
         TextView label = (TextView) mainActivity.findViewById(R.id.tv_message);
-        label.setText("「" + result + "」" + "を追加しました");
+
+    	try {
+    		// idから登録されたデータを取得する
+            RssModel rss = RssModel.findById(id);
+
+            // 更新結果をラベルに表示
+            label.setText("「" + rss.getTitle() + "」" + "を追加しました");
+            
+            // アクティビティのモデルを更新
+            mainActivity.setRss(rss);
+    	} catch (Exception e) {
+    		// 該当データがないか、想定していないエラーが発生した
+            label.setText("想定しないエラーが発生しました");
+    	}
+
+    	Log.d("APP", "Rss登録処理の後処理を終了します");
     }
 }
