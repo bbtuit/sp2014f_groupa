@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -98,43 +101,61 @@ public class MainActivity extends Activity {
             // DB(読出用)のオブジェクト生成
         	db = helper.getWritableDatabase(); 	
 
-			/* DBデータ一覧表示 */
-			if (db != null) {
-				try {
-					// SQL文の実行
-					Cursor cursor = db.rawQuery("select * from rsses", null);
+    		/* DBデータ一覧表示 */
+    		if (db != null) {
+    			try {
+    				// SQL文の実行
+    				Cursor cursor = db.rawQuery("select * from articles", null);
 
-					// ListView初期化
-					ListView list = (ListView) rootView
-							.findViewById(android.R.id.list);
-					ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
-							getActivity(), android.R.layout.simple_list_item_1);
+    				// ListView初期化
+    				ListView list = (ListView) rootView
+    						.findViewById(android.R.id.list);
+    				ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+    						getActivity(), android.R.layout.simple_list_item_1);
 
-					// カーソル開始位置を先頭にする
-					cursor.moveToFirst();
+    				// カーソル開始位置を先頭にする
+    				cursor.moveToFirst();
 
-					// DBデータ取得
-					for (int i = 0; i < cursor.getCount(); i++) {
-						// mAdapterにDBから文字列を追加
-						mAdapter.add(cursor.getString(2));
-						cursor.moveToNext();
-					}
+    				// DBデータ取得
+    				for (int i = 0; i < cursor.getCount(); i++) {
+    					// mAdapterにDBから文字列を追加
+    					mAdapter.add(cursor.getString(3));
+    					cursor.moveToNext();
+    				}
 
-					// DBクローズ
-					cursor.close();
-					db.close();
+    				// DBクローズ
+    				cursor.close();
+    				db.close();
 
-					// リストビューにアダプターをセット
-					list.setAdapter(mAdapter);
+    				// リストビューにアダプターをセット
+    				list.setAdapter(mAdapter);
+    				// ListViewオブジェクトにクリックリスナー設定
+    		 		list.setOnItemClickListener(new ListItemClickListener());
 
-				} catch (SQLException e) {
-					Log.e("TAG", "SQLExcepption:" + e.toString());
-				}
-			}
-			return rootView;
+    			} catch (SQLException e) {
+    				Log.e("TAG", "SQLExcepption:" + e.toString());
+    			}
+    		}
+    		return rootView;
 
         }
-
+     	// アイテムクリックリスナー定義
+     	class ListItemClickListener implements OnItemClickListener {
+     	    // onItemClickメソッド(リストの値クリック時イベントハンドラ)
+     	    public void onItemClick(AdapterView<?> parent,
+     	                                View view,
+     	                                int position,
+     	                                long id) {
+     	        // クリック時のListViewオブジェクト取得
+     	        ListView listview = (ListView) parent;
+     	        // 選択された値取得
+     	        String item = (String) listview.getItemAtPosition(position);
+      	    	//URI	        
+     	        Uri uri = Uri.parse(item);
+     	        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+     	        startActivity(intent);  	        
+     	    }
+     	}
         //ここからなべさん
         // ボタンクリックリスナー定義
         class ButtonClickListener implements OnClickListener {
@@ -153,9 +174,9 @@ public class MainActivity extends Activity {
                     startActivity(intent1);
                     break;
                 }
-           }
+            }
         }
-    }
-}
+    }}
+
 
 
