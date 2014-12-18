@@ -111,6 +111,7 @@ public class AddRss extends Activity {
 
                 // テーブルレイアウトオブジェクト取得
                 TableLayout tablelayout = (TableLayout)getActivity().findViewById(R.id.tl_list);
+                //tablelayout.setColumnShrinkable(2, true);
 
                 // テーブルレイアウトのクリア
                 tablelayout.removeAllViews();
@@ -208,40 +209,35 @@ public class AddRss extends Activity {
                         TableRow headrow = new TableRow(getActivity());
 
                         TextView headtxt1 = new TextView(getActivity());
-                        headtxt1.setText("URL");
-                        headtxt1.setGravity(Gravity.CENTER_HORIZONTAL);
-                        headtxt1.setWidth(60);
-                        TextView headtxt2 = new TextView(getActivity());
-                        headtxt2.setText("RSS名");
-                        headtxt2.setGravity(Gravity.CENTER_HORIZONTAL);
-                        headtxt2.setWidth(100);
-                        TextView headtxt3 = new TextView(getActivity());
-                        headtxt3.setText("登録日");
-                        headtxt3.setGravity(Gravity.CENTER_HORIZONTAL);
-                        headtxt3.setWidth(60);
+                        headtxt1.setText("URL-RSS名-登録日");
+                        headtxt1.setGravity(Gravity.FILL_HORIZONTAL);
+                        headtxt1.setWidth(100);
                         headrow.addView(headtxt1);
-                        headrow.addView(headtxt2);
-                        headrow.addView(headtxt3);
                         tablelayout.addView(headrow);
 
                         // 取得したデータをテーブル明細部に設定
                         while(cursor.moveToNext()){
 
                             TableRow row = new TableRow(getActivity());
-                            TextView urltxt
-                                    = new TextView(getActivity());
-                            urltxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                            urltxt.setText(cursor.getString(0));
                             TextView titletxt = new TextView(getActivity());
-                            titletxt.setGravity(Gravity.CENTER_HORIZONTAL);
+                            titletxt.setGravity(Gravity.FILL_HORIZONTAL);
                             titletxt.setText(cursor.getString(1));
-                            TextView created_attxt = new TextView(getActivity());
-                            created_attxt.setGravity(Gravity.CENTER_HORIZONTAL);
-                            created_attxt.setText(cursor.getString(2));
-                            row.addView(urltxt);
                             row.addView(titletxt);
-                            row.addView(created_attxt);
                             tablelayout.addView(row);
+                            
+                            TableRow row2 = new TableRow(getActivity());
+                            TextView urltxt = new TextView(getActivity());
+                            urltxt.setGravity(Gravity.FILL_HORIZONTAL);
+                            urltxt.setText(cursor.getString(0));
+                            row2.addView(urltxt);
+                            tablelayout.addView(row2);
+                            
+                            TableRow row3 = new TableRow(getActivity());
+                            TextView created_attxt = new TextView(getActivity());
+                            created_attxt.setGravity(Gravity.FILL_HORIZONTAL);
+                            created_attxt.setText(cursor.getString(2));
+                            row3.addView(created_attxt);
+                            tablelayout.addView(row3);
 
                             // メッセージ設定
                             message = "データを取得しました！";
