@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -64,6 +65,8 @@ public class AsyncInsertRssRequest extends AsyncTask<URL, Void, Long> {
     protected void onPostExecute(Long id) {
     	Log.d("APP", "Rss登録処理の後処理を開始します");
         TextView label = (TextView) mainActivity.findViewById(R.id.tv_message);
+        EditText etTitle = (EditText) mainActivity.findViewById(R.id.et_title);
+        EditText etCreatedAt = (EditText) mainActivity.findViewById(R.id.et_created_at);
 
     	try {
     		// idから登録されたデータを取得する
@@ -71,6 +74,8 @@ public class AsyncInsertRssRequest extends AsyncTask<URL, Void, Long> {
 
             // 更新結果をラベルに表示
             label.setText("「" + rss.getTitle() + "」" + "を追加しました");
+            etTitle.setText(rss.getTitle());
+            etCreatedAt.setText(rss.getCreatedAt());
             
             // アクティビティのモデルを更新
             mainActivity.setRss(rss);

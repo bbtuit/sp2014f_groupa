@@ -104,17 +104,20 @@ public class SQLiteHelper extends SQLiteOpenHelper {
      * この処理ではRSSの記事データの登録を行います。
      * 
      * @param	rss_id	rssesテーブルのid
+     * @return	登録した記事件数を返す
      */
-    public void updateRss(long rss_id) {
+    public long updateRss(long rss_id) {
     	Log.d("APP", "Feedの更新処理を開始します");
     	
+    	long cnt = 0; // 戻り値で使用する登録した記事件数を保持する
+
     	try {
     		RssModel rss = RssModel.findById(rss_id);
     		URL url = new URL(rss.getUrl());
             SyndFeed feed = this.fetchRssFromInternet(url);
 
             // 記事データの登録
-            this.insertArticles(rss_id, feed);
+            cnt = this.insertArticles(rss_id, feed);
 
             Log.d("APP", "Feedの更新に成功しました（URL:" + url + "）");
     	} catch (NotFoundException e) {
@@ -137,6 +140,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     	}
     	
     	Log.d("APP", "Feedの更新処理を終了します");
+    	
+    	return cnt;
     }
 
     /**
@@ -257,13 +262,16 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     
     /**
      * SyndFeedからarticlesテーブルに記事を追加する
+     * 既に登録済みの記事は登録しない
      * 
      * @param	rss_id		rssテーブルの該当データのID(rsses.id)
      * @param	synd_feed	取得済みのSyndFeed
+     * @return 登録した記事の件数を返す
      */
-    public void insertArticles(long rss_id, SyndFeed synd_feed) {
+    public long insertArticles(long rss_id, SyndFeed synd_feed) {
     	Log.d("APP", "記事の登録処理を開始します");
-
+    	
+    	long cnt = 0; // 戻り値に使う登録数を保持する
     	try {
             // トランザクション制御開始
             SQLiteDatabase db = this.getWritableDatabase();
@@ -290,6 +298,9 @@ public class SQLiteHelper extends SQLiteOpenHelper {
 
                 // データ登録
                 db.insert("articles", null, val);
+                
+                // 登録件数をインクリメント
+            	cnt++;
             }
 
             // コミット
@@ -298,7 +309,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
             // トランザクション制御終了
             db.endTransaction();
 
-            Log.d("APP", "記事の登録に成功しました（登録件数： " + synd_feed.getEntries().size() + " 件）");
+            Log.d("APP", "記事の登録に成功しました（登録件数： " + cnt + " 件）");
     	} catch (Exception e) {
     		Log.e("APP", "記事の登録に失敗しました");
     		Log.e("APP", e.getClass().getName());
@@ -306,6 +317,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     	}
 
     	Log.d("APP", "記事の登録処理を終了します");
+    	
+    	return cnt;
     }
     
     @Override

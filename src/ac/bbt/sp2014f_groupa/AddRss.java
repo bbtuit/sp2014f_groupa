@@ -140,7 +140,7 @@ public class AddRss extends Activity {
                         val.put("title", title.getText().toString());
                         val.put("created_at", created_at.getText().toString());
                         // データ更新
-                        db.update("id", val, condition, null);
+                        db.update("rsses", val, condition, null);
 
                         // コミット
                         db.setTransactionSuccessful();
@@ -171,7 +171,7 @@ public class AddRss extends Activity {
                         db.beginTransaction();
 
                         // データ削除
-                        db.delete("id", condition, null);
+                        db.delete("rsses", condition, null);
 
                         // コミット
                         db.setTransactionSuccessful();
@@ -199,7 +199,7 @@ public class AddRss extends Activity {
 
                         // データ取得
                         Cursor cursor = db.query(
-                                "id", columns, null, null, null, null, "url");
+                                "rsses", columns, null, null, null, null, "url");
 
                         // テーブルレイアウトの表示範囲を設定
                         tablelayout.setStretchAllColumns(true);
