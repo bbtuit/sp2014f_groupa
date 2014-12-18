@@ -14,6 +14,8 @@ import com.google.code.rome.android.repackaged.com.sun.syndication.io.FeedExcept
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.SyndFeedInput;
 import com.google.code.rome.android.repackaged.com.sun.syndication.io.XmlReader;
 
+import ac.bbt.sp2014f_groupa.models.NotFoundException;
+import ac.bbt.sp2014f_groupa.models.RssModel;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
@@ -95,6 +97,46 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     	Log.d("APP", "Feedの登録処理を終了します");
 
     	return id;
+    }
+
+    /**
+     * RSSの更新処理
+     * この処理ではRSSの記事データの登録を行います。
+     * 
+     * @param	rss_id	rssesテーブルのid
+     */
+    public void updateRss(long rss_id) {
+    	Log.d("APP", "Feedの更新処理を開始します");
+    	
+    	try {
+    		RssModel rss = RssModel.findById(rss_id);
+    		URL url = new URL(rss.getUrl());
+            SyndFeed feed = this.fetchRssFromInternet(url);
+
+            // 記事データの登録
+            this.insertArticles(rss_id, feed);
+
+            Log.d("APP", "Feedの更新に成功しました（URL:" + url + "）");
+    	} catch (NotFoundException e) {
+    		Log.e(
+    				"APP"
+    				, "指定されたrssデータが存在しません（rss_id: "
+    					+ rss_id
+    					+ ")"
+    				);
+    		Log.e("APP", e.getMessage());
+    	} catch (Exception e) {
+    		Log.e(
+    				"APP"
+    				, "フィードの登録に失敗しました(URL: "
+    					+ rss_id
+    					+ ")"
+    				);
+    		Log.e("APP", e.getClass().getName());
+    		Log.e("APP", e.getMessage());
+    	}
+    	
+    	Log.d("APP", "Feedの更新処理を終了します");
     }
 
     /**
