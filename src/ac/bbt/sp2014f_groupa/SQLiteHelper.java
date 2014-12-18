@@ -256,26 +256,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     }
     
     /**
-     * 指定されたrss_idのRSS Feedを取得し記事を更新する。
-     *
-     * @param rss_id
-     */
-    public void updateRssArticles(long rss_id) {
-    	SQLiteDatabase db = this.getReadableDatabase();
-    	Cursor cursor = db.query(
-    			"rsses"
-    			, new String[] {"url"}
-    			, "id=?"
-    			, new String[] {String.valueOf(rss_id)}
-    			, null
-    			, null
-    			, null
-    			);
-        cursor.moveToFirst();
-        String url = cursor.getString(0);
-    }
-
-    /**
      * SyndFeedからarticlesテーブルに記事を追加する
      * 
      * @param	rss_id		rssテーブルの該当データのID(rsses.id)
