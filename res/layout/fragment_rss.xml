@@ -4,6 +4,37 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     tools:context="ac.bbt.sp2014f_groupa.AddRssActivity$PlaceholderFragment" >
+
+   <View
+   android:layout_width="match_parent"
+   android:layout_height="2dp"
+   android:background="@android:color/black" />
+    
+    <GridLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:columnCount="5" >
+
+        
+        <Button
+            android:id="@+id/bt_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/home"
+            android:layout_gravity="right"
+            android:background="#ffffff"
+            android:layout_marginTop="0dp" />
+
+
+
+
+        
+    </GridLayout>
+    
+   <View
+   android:layout_width="match_parent"
+   android:layout_height="2dp"
+   android:background="@android:color/black" />
     
     <TableLayout
         android:layout_width="match_parent"

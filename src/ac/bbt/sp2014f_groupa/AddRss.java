@@ -91,6 +91,11 @@ public class AddRss extends Activity {
             selectBtn.setTag("display");
             selectBtn.setOnClickListener(new ButtonClickListener());
 
+            // Homeボタンのクリックリスナー設定
+            Button homeBtn = (Button)rootView.findViewById(R.id.bt_home);
+            homeBtn.setTag("home");
+            homeBtn.setOnClickListener(new ButtonClickListener());
+
             return rootView;
         }
 
@@ -248,6 +253,9 @@ public class AddRss extends Activity {
                         message = "データ取得に失敗しました！";
                         Log.e("ERROR",e.toString());
                     }
+                //homeボタンが押されたとき
+                }else if(tag.equals("home")){
+                	getActivity().finish();
                 }
 
                 // DBオブジェクトクローズ
@@ -326,6 +334,7 @@ public class AddRss extends Activity {
 
 		Log.d("APP", "RssModelオブジェクトがセットされました（Title: " + rss.getTitle() + "）");
 	}
+	
 }
 
     

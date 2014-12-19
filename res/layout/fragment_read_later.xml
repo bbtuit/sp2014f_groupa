@@ -10,6 +10,36 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ac.bbt.sp2014f_groupa.MainActivity$PlaceholderFragment" >
 
+   <View
+   android:layout_width="match_parent"
+   android:layout_height="2dp"
+   android:background="@android:color/black" />
+    
+    <GridLayout
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:columnCount="5" >
+
+        
+        <Button
+            android:id="@+id/bt_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/home"
+            android:layout_gravity="right"
+            android:background="#ffffff"
+            android:layout_marginTop="0dp" />
+
+
+        
+    </GridLayout>
+    
+   <View
+   android:layout_width="match_parent"
+   android:layout_height="2dp"
+   android:background="@android:color/black" />
+    
+    
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,5 +60,10 @@
         android:layout_height="wrap_content" />
     <!-- リストが空のときに表示 -->
 
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.67"/>
 
 </LinearLayout>

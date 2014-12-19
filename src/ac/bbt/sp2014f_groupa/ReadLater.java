@@ -1,6 +1,7 @@
 package ac.bbt.sp2014f_groupa;
 
 import ac.bbt.sp2014f_groupa.MainActivity.PlaceholderFragment.ButtonClickListener;
+import ac.bbt.sp2014f_groupa.MainActivity.PlaceholderFragment.ListItemClickListener;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -20,6 +21,7 @@ import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -83,43 +85,50 @@ public class ReadLater extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_read_later, container, false);
-            
+
+
             helper = SQLiteHelper.getInstance();
-        
-			/* DBデータ一覧表示 */
-			if (db != null) {
-				try {
-					// SQL文の実行
-					Cursor cursor = db.rawQuery("select * from to_reads", null);
+            
+            
+            // DB(読出用)のオブジェクト生成
+        	db = helper.getWritableDatabase(); 	
 
-					// ListView初期化
-					ListView list = (ListView) rootView
-							.findViewById(android.R.id.list);
-					ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
-							getActivity(), android.R.layout.simple_list_item_1);
+    		/* DBデータ一覧表示 */
+    		if (db != null) {
+    			try {
+    				// SQL文の実行
+    				Cursor cursor = db.rawQuery("select * from to_reads", null);
 
-					// カーソル開始位置を先頭にする
-					cursor.moveToFirst();
+    				// ListView初期化
+    				ListView list = (ListView) rootView
+    						.findViewById(android.R.id.list);
+    				ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+    						getActivity(), android.R.layout.simple_list_item_1);
 
-					// DBデータ取得
-					for (int i = 0; i < cursor.getCount(); i++) {
-						// mAdapterにDBから文字列を追加
-						mAdapter.add(cursor.getString(1));
-						cursor.moveToNext();
-					}
+    				// カーソル開始位置を先頭にする
+    				cursor.moveToFirst();
 
-					// DBクローズ
-					cursor.close();
-					db.close();
+    				// DBデータ取得
+    				for (int i = 0; i < cursor.getCount(); i++) {
+    					// mAdapterにDBから文字列を追加
+    					mAdapter.add(cursor.getString(2));
+    					cursor.moveToNext();
+    				}
 
-					// リストビューにアダプターをセット
-					list.setAdapter(mAdapter);
+    				// DBクローズ
+    				cursor.close();
+    				db.close();
 
-				} catch (SQLException e) {
-					Log.e("TAG", "SQLExcepption:" + e.toString());
-				}
-			}
+    				// リストビューにアダプターをセット
+    				list.setAdapter(mAdapter);
+
+    			} catch (SQLException e) {
+    				Log.e("TAG", "SQLExcepption:" + e.toString());
+    			}
+    		}
+
 			return rootView;
 		}
 	}
 }
+

@@ -189,6 +189,9 @@ public class MainActivity extends Activity {
                     // 次のアクティビティの起動
                     startActivity(intent1);
                     break;
+                case R.id.bt_home:
+                	getActivity().finish();
+                    break;
                 }
             }
         }
