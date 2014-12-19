@@ -46,5 +46,17 @@
         android:layout_height="wrap_content" />
     <!-- リストが空のときに表示 -->
 
+        <TextView
+            android:id="@+id/item_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.67"/>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bt_storage" />
+
 
 </LinearLayout>

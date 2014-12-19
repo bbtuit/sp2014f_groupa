@@ -13,6 +13,7 @@
     <string name="bt_delete">削除</string>
     <string name="bt_display">表示</string>
     <string name="bt_addRSS">RSS登録</string>
+    <string name="bt_storage">Pocket</string>  
     <string name="bt_read_later">あとで読む</string>
     <string name="title_activity_read_later">ReadLater</string>
 

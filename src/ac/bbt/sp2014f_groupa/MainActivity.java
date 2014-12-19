@@ -1,5 +1,7 @@
 package ac.bbt.sp2014f_groupa;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -48,8 +50,11 @@ public class MainActivity extends Activity {
             helper.initTables();
             helper.initDummyData();
         }
+        
     }
 
+
+  		
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -68,7 +73,6 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -130,32 +134,44 @@ public class MainActivity extends Activity {
     				// リストビューにアダプターをセット
     				list.setAdapter(mAdapter);
     				// ListViewオブジェクトにクリックリスナー設定
-    		 		list.setOnItemClickListener(new ListItemClickListener());
+    				list.setOnItemClickListener(new ListItemClickListener());
 
     			} catch (SQLException e) {
     				Log.e("TAG", "SQLExcepption:" + e.toString());
     			}
     		}
     		return rootView;
+    		
+
 
         }
+	    		
      	// アイテムクリックリスナー定義
      	class ListItemClickListener implements OnItemClickListener {
-     	    // onItemClickメソッド(リストの値クリック時イベントハンドラ)
-     	    public void onItemClick(AdapterView<?> parent,
-     	                                View view,
-     	                                int position,
-     	                                long id) {
-     	        // クリック時のListViewオブジェクト取得
-     	        ListView listview = (ListView) parent;
-     	        // 選択された値取得
-     	        String item = (String) listview.getItemAtPosition(position);
-      	    	//URI	        
-     	        Uri uri = Uri.parse(item);
-     	        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
-     	        startActivity(intent);  	        
-     	    }
-     	}
+		    // onItemClickメソッド(リストの値クリック時イベントハンドラ)
+		    public void onItemClick(AdapterView<?> parent,
+		                                View view,
+		                                int position,
+		                                long id) {
+		        // クリック時のListViewオブジェクト取得
+		        ListView listview = (ListView) parent;
+		        // 選択された値取得
+		        String item = (String) listview.getItemAtPosition(position);
+		    	//URI	        
+		        Uri uri = Uri.parse(item);
+		        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
+		        startActivity(intent);  	        
+		    }
+		}
+     	
+	    //ここから高場さん --エラーになってしまうのでコメントアウト
+	    // Itemオブジェクトを保持するためのリストを生成し、アダプタに追加する
+	    //private RSSListAdapter mAdapter;
+	    //private ArrayList<Item> mItems;
+	    //mItems = new ArrayList<Item>();
+	    //mAdapter = new RSSListAdapter(this, mItems);
+	    //ここまで高場さん		
+		
         //ここからなべさん
         // ボタンクリックリスナー定義
         class ButtonClickListener implements OnClickListener {
@@ -176,7 +192,8 @@ public class MainActivity extends Activity {
                 }
             }
         }
-    }}
+    }
+}
 
 
 
