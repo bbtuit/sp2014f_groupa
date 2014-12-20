@@ -71,21 +71,24 @@
    android:layout_width="match_parent"
    android:layout_height="2dp"
    android:background="@android:color/black" />
+ 
+   <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnCount="2" >
    
     <!-- リストビュー -->
     <ListView
         android:id="@+id/android:list"
-        android:layout_width="fill_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content" />
-    <!-- リストが空のときに表示 -->
 
-        <TextView
-            android:id="@+id/item_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.67"/>
+    <ListView
+        android:id="@+id/android:list2"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content" />
 
-
+    </GridLayout>
 
 
 </LinearLayout>

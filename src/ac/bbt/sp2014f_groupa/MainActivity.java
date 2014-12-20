@@ -80,9 +80,8 @@ public class MainActivity extends Activity {
     	SQLiteHelper helper = null;
     	SQLiteDatabase db = null;   	
 		ArrayAdapter<String> mAdapter = null;
-    	private TextView mTitle;
-		private Activity view;
-    	
+		ArrayAdapter<String> mAdapter2 = null;
+     	
         public PlaceholderFragment() { 	
         }
 
@@ -113,8 +112,12 @@ public class MainActivity extends Activity {
                 // ListView初期化
                 ListView list = (ListView) rootView
                         .findViewById(android.R.id.list);
+                ListView list2 = (ListView) rootView
+                        .findViewById(android.R.id.list);
                 mAdapter = new ArrayAdapter<String>(
                         getActivity(), android.R.layout.simple_list_item_1);
+                //mAdapter2 = new ArrayAdapter<String>(
+                //        getActivity(), android.R.layout.simple_list_item_1);
 
                 // カーソル開始位置を先頭にする
                 cursor.moveToFirst();
@@ -123,12 +126,15 @@ public class MainActivity extends Activity {
                 for (int i = 0; i < cursor.getCount(); i++) {
                     // mAdapterにDBから文字列を追加
                     mAdapter.add(cursor.getString(3));
+                    mAdapter.add(cursor.getString(2));
                     cursor.moveToNext();
                 }
 
                 // リストビューにアダプターをセット
                 list.setAdapter(mAdapter);
-                // ListViewオブジェクトにクリックリスナー設定
+                //list.setAdapter(mAdapter2);
+                // ListViwオブジェクトにクリックリスナー設定
+                //list2.setOnItemClickListener(new ListItemClickListener());
                 list.setOnItemClickListener(new ListItemClickListener());
 
             } catch (SQLException e) {
@@ -153,8 +159,8 @@ public class MainActivity extends Activity {
 		        // 選択された値取得
 		        String item = (String) listview.getItemAtPosition(position);
 		    	//URI	        
-		        //Uri uri = Uri.parse(item);
-		        Uri uri = Uri.parse("http://google.com/");
+		        Uri uri = Uri.parse(item);
+		        //Uri uri = Uri.parse("http://google.com/");
 		        
 		        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
 		        startActivity(intent);  	        

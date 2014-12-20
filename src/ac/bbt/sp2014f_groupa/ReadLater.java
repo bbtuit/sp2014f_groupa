@@ -20,8 +20,8 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -85,7 +85,11 @@ public class ReadLater extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_read_later, container, false);
-
+            
+         // Homeボタンのクリックリスナー設定
+            Button homeBtn = (Button)rootView.findViewById(R.id.bt_home);
+            homeBtn.setTag("home");
+            homeBtn.setOnClickListener(new ButtonClickListener());
 
             helper = SQLiteHelper.getInstance();
             
@@ -97,7 +101,7 @@ public class ReadLater extends Activity {
     		if (db != null) {
     			try {
     				// SQL文の実行
-    				Cursor cursor = db.rawQuery("select * from to_reads", null);
+    				Cursor cursor = db.rawQuery("select * from articles", null);
 
     				// ListView初期化
     				ListView list = (ListView) rootView
@@ -109,9 +113,9 @@ public class ReadLater extends Activity {
     				cursor.moveToFirst();
 
     				// DBデータ取得
-    				for (int i = 0; i < cursor.getCount(); i++) {
+    				for (int i = 0; i < 5; i++) {
     					// mAdapterにDBから文字列を追加
-    					mAdapter.add(cursor.getString(2));
+    					mAdapter.add(cursor.getString(3));    					
     					cursor.moveToNext();
     				}
 
@@ -129,6 +133,19 @@ public class ReadLater extends Activity {
 
 			return rootView;
 		}
+	       // クリックリスナー定義
+        class ButtonClickListener implements OnClickListener {
+            // onClickメソッド(ボタンクリック時イベントハンドラ)
+            public void onClick(View v){
+                // タsグの取得
+                String tag = (String)v.getTag();
+
+                // 登録ボタンが押された場合
+                if(tag.equals("home")){
+                	getActivity().finish();
+                }
+            }
+        }
 	}
 }
 
