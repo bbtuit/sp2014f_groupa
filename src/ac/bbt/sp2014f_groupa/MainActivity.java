@@ -79,6 +79,7 @@ public class MainActivity extends Activity {
     public static class PlaceholderFragment extends Fragment {
     	SQLiteHelper helper = null;
     	SQLiteDatabase db = null;   	
+		ArrayAdapter<String> mAdapter = null;
     	private TextView mTitle;
 		private Activity view;
     	
@@ -94,10 +95,12 @@ public class MainActivity extends Activity {
             // ボタンオブジェクト取得
             Button addRss = (Button)rootView.findViewById(R.id.bt_addRSS);
             Button readLater = (Button)rootView.findViewById(R.id.bt_read_later);
+            Button reload = (Button)rootView.findViewById(R.id.bt_reload);
 
             // ボタンオブジェクトにクリックリスナー設定
             addRss.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
             readLater.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
+            reload.setOnClickListener((android.view.View.OnClickListener) new ButtonClickListener());
 
             //ここまでなべさん            
             helper = SQLiteHelper.getInstance();
@@ -114,7 +117,7 @@ public class MainActivity extends Activity {
     				// ListView初期化
     				ListView list = (ListView) rootView
     						.findViewById(android.R.id.list);
-    				ArrayAdapter<String> mAdapter = new ArrayAdapter<String>(
+    				mAdapter = new ArrayAdapter<String>(
     						getActivity(), android.R.layout.simple_list_item_1);
 
     				// カーソル開始位置を先頭にする
@@ -193,6 +196,11 @@ public class MainActivity extends Activity {
                     break;
                 case R.id.bt_home:
                 	getActivity().finish();
+                    break;
+                case R.id.bt_reload:
+					AsyncUpdateAllRssRequest task = new AsyncUpdateAllRssRequest(mAdapter);
+					task.execute();
+
                     break;
                 }
             }

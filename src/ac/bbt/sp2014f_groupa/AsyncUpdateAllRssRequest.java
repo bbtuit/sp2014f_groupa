@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 /**
@@ -16,16 +18,15 @@ import android.widget.TextView;
  * @author Uehara Masato
  */
 public class AsyncUpdateAllRssRequest extends AsyncTask<Void, Void, Long> {
-    private Activity mainActivity;
+    private ArrayAdapter<String> mAdapter;
 
     /**
      * コンストラクタ
      *  
      * @param activity	呼び出し元のActivity
      */
-    public AsyncUpdateAllRssRequest(Activity activity) {
-        // 呼び出し元のアクティビティ
-        this.mainActivity = activity;
+    public AsyncUpdateAllRssRequest(ArrayAdapter<String> mAdapter) {
+        this.mAdapter = mAdapter;
     }
     
     /**
@@ -84,10 +85,9 @@ public class AsyncUpdateAllRssRequest extends AsyncTask<Void, Void, Long> {
     @Override
     protected void onPostExecute(Long cnt) {
     	Log.d("APP", "Rss更新処理の後処理を開始します");
-        TextView label = (TextView) mainActivity.findViewById(R.id.tv_message);
 
-        // 更新結果をラベルに表示
-        label.setText(cnt + "件の記事を追加しました");
+    	mAdapter.clear();
+    	mAdapter.notifyDataSetChanged();
 
     	Log.d("APP", "Rss更新処理の後処理を終了します");
     }
