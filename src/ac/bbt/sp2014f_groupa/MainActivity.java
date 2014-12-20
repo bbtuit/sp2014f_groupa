@@ -158,7 +158,9 @@ public class MainActivity extends Activity {
 		        // 選択された値取得
 		        String item = (String) listview.getItemAtPosition(position);
 		    	//URI	        
-		        Uri uri = Uri.parse(item);
+		        //Uri uri = Uri.parse(item);
+		        Uri uri = Uri.parse("http://google.com/");
+		        
 		        Intent intent = new Intent(Intent.ACTION_VIEW,uri);
 		        startActivity(intent);  	        
 		    }
