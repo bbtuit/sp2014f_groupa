@@ -105,44 +105,36 @@ public class MainActivity extends Activity {
             //ここまでなべさん            
             helper = SQLiteHelper.getInstance();
         
-            // DB(読出用)のオブジェクト生成
-        	db = helper.getWritableDatabase(); 	
-
     		/* DBデータ一覧表示 */
-    		if (db != null) {
-    			try {
-    				// SQL文の実行
-    				Cursor cursor = db.rawQuery("select * from articles", null);
+            try {
+                // SQL文の実行
+                Cursor cursor = helper.findAllArticlesForMainActivity();
 
-    				// ListView初期化
-    				ListView list = (ListView) rootView
-    						.findViewById(android.R.id.list);
-    				mAdapter = new ArrayAdapter<String>(
-    						getActivity(), android.R.layout.simple_list_item_1);
+                // ListView初期化
+                ListView list = (ListView) rootView
+                        .findViewById(android.R.id.list);
+                mAdapter = new ArrayAdapter<String>(
+                        getActivity(), android.R.layout.simple_list_item_1);
 
-    				// カーソル開始位置を先頭にする
-    				cursor.moveToFirst();
+                // カーソル開始位置を先頭にする
+                cursor.moveToFirst();
 
-    				// DBデータ取得
-    				for (int i = 0; i < cursor.getCount(); i++) {
-    					// mAdapterにDBから文字列を追加
-    					mAdapter.add(cursor.getString(3));
-    					cursor.moveToNext();
-    				}
+                // DBデータ取得
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    // mAdapterにDBから文字列を追加
+                    mAdapter.add(cursor.getString(3));
+                    cursor.moveToNext();
+                }
 
-    				// DBクローズ
-    				cursor.close();
-    				db.close();
+                // リストビューにアダプターをセット
+                list.setAdapter(mAdapter);
+                // ListViewオブジェクトにクリックリスナー設定
+                list.setOnItemClickListener(new ListItemClickListener());
 
-    				// リストビューにアダプターをセット
-    				list.setAdapter(mAdapter);
-    				// ListViewオブジェクトにクリックリスナー設定
-    				list.setOnItemClickListener(new ListItemClickListener());
+            } catch (SQLException e) {
+                Log.e("TAG", "SQLExcepption:" + e.toString());
+            }
 
-    			} catch (SQLException e) {
-    				Log.e("TAG", "SQLExcepption:" + e.toString());
-    			}
-    		}
     		return rootView;
     		
 

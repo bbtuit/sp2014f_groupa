@@ -392,6 +392,17 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         return is_table_exists;
     }
     
+    public Cursor findAllArticlesForMainActivity() {
+    	Cursor cursor = null;
+        SQLiteDatabase db = this.getReadableDatabase(); 	
+        
+        // SQL文の実行
+        //cursor = db.rawQuery("SELECT * FROM articles ORDER BY published_at DESC", null);
+    	cursor = db.rawQuery("SELECT * FROM articles ORDER BY published_at DESC", null);
+    	
+    	return cursor;
+    }
+    
     /**
      * テーブルの初期化メソッド
      * 

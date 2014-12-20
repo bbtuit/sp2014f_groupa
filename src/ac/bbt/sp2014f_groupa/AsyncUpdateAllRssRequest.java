@@ -86,9 +86,25 @@ public class AsyncUpdateAllRssRequest extends AsyncTask<Void, Void, Long> {
     protected void onPostExecute(Long cnt) {
     	Log.d("APP", "Rss更新処理の後処理を開始します");
 
+    	// まずはアダプターをクリアする
     	mAdapter.clear();
+
     	mAdapter.notifyDataSetChanged();
 
+        // DB(読出用)のオブジェクト生成
+        SQLiteHelper helper = SQLiteHelper.getInstance();
+
+        /* DBデータ一覧表示 */
+        // 一覧の取得
+        Cursor cursor = helper.findAllArticlesForMainActivity();
+
+        while (cursor.moveToNext()) {
+            mAdapter.add(cursor.getString(3));
+        }
+
+        // カーソルのクローズ
+        cursor.close();
+        
     	Log.d("APP", "Rss更新処理の後処理を終了します");
     }
 }
